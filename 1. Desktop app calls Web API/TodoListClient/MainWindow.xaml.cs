@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
 using Microsoft.Identity.Client;
@@ -224,7 +224,12 @@ namespace TodoListClient
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", result.AccessToken);
 
             // Forms encode Todo item, to POST to the todo list web api.
-            TodoItem todoItem = new TodoItem() { Title = TodoText.Text };
+            TodoItem todoItem = null;
+            Dispatcher.Invoke(() =>
+            {
+              todoItem = new TodoItem() { Title = TodoText.Text };
+            });
+      
             string json = JsonConvert.SerializeObject(todoItem);
             StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -239,7 +244,7 @@ namespace TodoListClient
             }
             else
             {
-                    await DisplayErrorMessage(response);
+              await DisplayErrorMessage(response);
             }
         }
 
